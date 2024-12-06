@@ -1,5 +1,12 @@
+# Mikhail Ananich
+# Date 05/12/2024
+# Description: Test task Python Junior. Effective Mobile Test.
+# Grodno Python 3.10
+
+
 import json
 from datetime import date
+
 
 # Создаем класс книги
 class Book:
@@ -24,6 +31,7 @@ def load_books(filename='books.json'):
     except FileNotFoundError:
         return []
 
+
 # Сохраняем книгу в JSON файл
 def save_books(books, filename='books.json'):
     with open(filename, 'w', encoding='utf-8') as f:
@@ -36,6 +44,7 @@ def save_books(books, filename='books.json'):
 def add_book(books, title, author, year):
     # Для нескольких файлов проще всего было бы сделать так:
     # book_id = len(books) + 1 
+    # Это обеспечило бы простоту работы с экземплярами книг.
     # Но в случае удаления книги из середины библиотеки новая книга допишется с уже существующим ID
     book_id = id(title) 
     new_book = Book(book_id, title, author, year)
@@ -54,7 +63,6 @@ def remove_book(books, book_id):
     print('Книга не найдена.')
 
 
-
 # Поиск
 def search_books(books, query):
     # Если в списке есть книга удовлетворяющая запрос пользователя, то она добавляется в список найденых книг
@@ -63,7 +71,6 @@ def search_books(books, query):
             str(book.year) == query]
     return results
        
-
 
 # Показать все книги
 def display_books(books):
@@ -76,13 +83,12 @@ def display_books(books):
 # Изменение статуса книги
 def change_status(books, book_id, status):
     for book in books:
+        # Если книга с введенным id существует - изменяется статус и перезаписывается файл библиотеки
         if book.book_id == book_id:
             book.status = status
             save_books(books)
             return
     print('Книга не найдена.')
-
-
 
 
 # Взаимодействие с пользователем
@@ -99,6 +105,7 @@ def main():
         print('0. Выйти\n')
         choice = input('Выберите действие: ')
         
+        # Добавить книгу
         if choice == '1':           
             title = input('Введите название книги: ')
             author = input('Введите автора книги: ')
@@ -112,11 +119,13 @@ def main():
                     add_book(books, title, author, year)
                 else:
                     print('Дата указана неверно.')
-            
+
+        # Удалить книгу    
         elif choice == '2':
             book_id = int(input('Введите ID книги для удаления: '))
             remove_book(books, book_id)
 
+        # Найти книгу
         elif choice == '3':
             query = input('Введите название, автора или год издания книги для поиска: ')
             results = search_books(books, query)
@@ -126,16 +135,19 @@ def main():
             else:
                 print('\nКнига не найдена.')
 
+        # Показать все книги
         elif choice == '4':
             display_books(books)
 
+        # Изменить статус книги
         elif choice == '5':
             try:
                 book_id = int(input('Введите ID книги: '))
             except(ValueError):
                 print('Неверный ввод.')
-            else:    
-                new_status = input('Введите новый статус (1 - в наличии; 2 - выдана): ')
+            else: 
+                print('Введите новый статус:\n1 - в наличии\n2 - выдана')   
+                new_status = input('Выберите новый статус: ')
                 if new_status == '1':
                     status = 'в наличии'
                     change_status(books, book_id, status)
@@ -145,9 +157,9 @@ def main():
                 else:
                     print('Неверный ввод.')
                 
-
+        # Выход
         elif choice == '0':
-            print('\nДо свидания')
+            print('\nДо свидания!')
             break
         
         else:
